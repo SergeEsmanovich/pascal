@@ -1,0 +1,71 @@
+program test;
+Uses SysUtils;
+Type
+	DB_Row = Record
+	id: Integer;
+	text: String;
+	height: Real;
+	weight: Integer;
+	End;
+Var
+textFile: text;
+s,result: string;
+myfile: Array[0..100] of DB_Row;
+count,i: Integer;
+
+function parse(s:string):DB_Row;
+Var
+i,n,k:integer;
+begin
+	n:=1;
+	k:=1;
+	for i:=1 to length(s) do
+	begin
+		if s[i]=';' then
+		begin
+		if k = 1 then
+		begin
+		parse.text:= copy(s,n,i-1);
+		n:=n+i;
+		end;
+
+		if k = 2 then
+		begin
+		parse.height:= StrToFloat(copy(s,n,i-1));
+		n:=n+i;
+		end;
+
+		if k = 3 then
+		begin
+		parse.weight:= StrToInt(copy(s,n,i-1));
+		n:=n+i;
+		end;
+		
+		k:=k+1;
+		end;
+	end;
+
+end;
+begin
+
+
+	assign(textFile,'input.txt');
+	reset(textFile);
+	i:=0;
+	While not eof(textFile) do
+    Begin
+    	count:=count+1;
+        Readln(textFile,s);
+        Writeln(s);
+        myfile[count]:= parse(s);
+    End;
+    Close(textFile);
+
+    for i:= 0 to count do
+    begin
+      	Writeln(myfile[i].height);
+    end;
+
+
+
+end.
